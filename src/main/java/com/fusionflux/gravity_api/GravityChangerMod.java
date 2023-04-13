@@ -27,7 +27,7 @@ public class GravityChangerMod implements ModInitializer {
         ModItems.init();
         GravityChannel.initServer();
 
-        MidnightConfig.init("gravity_api", GravityChangerConfig.class);
+        MidnightConfig.init(GravityChangerMod.MOD_ID, GravityChangerConfig.class);
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> GravityCommand.register(dispatcher));
     }
