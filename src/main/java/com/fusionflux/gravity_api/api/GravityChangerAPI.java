@@ -1,44 +1,40 @@
 package com.fusionflux.gravity_api.api;
 
-import java.util.ArrayList;
-import java.util.Optional;
-
 import com.fusionflux.gravity_api.GravityChangerMod;
 import com.fusionflux.gravity_api.RotationAnimation;
 import com.fusionflux.gravity_api.util.*;
 import com.fusionflux.gravity_api.util.packet.*;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
-
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
-
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public abstract class GravityChangerAPI {
     public static final ComponentKey<GravityComponent> GRAVITY_COMPONENT =
-            ComponentRegistry.getOrCreate(new Identifier("gravityapi", "gravity_direction"), GravityComponent.class);
+            ComponentRegistry.getOrCreate(new Identifier(GravityChangerMod.MOD_ID, "gravity_direction"), GravityComponent.class);
 
     public static final ComponentKey<GravityDimensionStrengthInterface> GRAVITY_DIMENSION_STRENGTH_COMPONENT =
-            ComponentRegistry.getOrCreate(new Identifier("gravityapi", "gravity_dimension_strength"), GravityDimensionStrengthInterface.class);
-    
+            ComponentRegistry.getOrCreate(new Identifier(GravityChangerMod.MOD_ID, "gravity_dimension_strength"), GravityDimensionStrengthInterface.class);
+
     // workaround for a CCA bug; maybeGet throws an NPE in internal code if the DataTracker isn't initialized
     // null check the component container to avoid it
     private static <C extends Component, V> Optional<C> maybeGetSafe(ComponentKey<C> key, @Nullable V provider) {
         if (provider instanceof ComponentProvider p) {
             var cc = p.getComponentContainer();
-            if (cc != null) {
-                return Optional.ofNullable(key.getInternal(cc));
-            }
+            return Optional.ofNullable(cc).map(key::getInternal);
         }
         return Optional.empty();
     }
@@ -56,11 +52,11 @@ public abstract class GravityChangerAPI {
         return Direction.DOWN;
     }
 
-    public static ArrayList<Gravity> getGravityList(Entity entity) {
+    public static List<Gravity> getGravityList(Entity entity) {
         if (EntityTags.canChangeGravity(entity)) {
-            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(GravityComponent::getGravity).orElse(new ArrayList<Gravity>());
+            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(GravityComponent::getGravity).orElse(List.of());
         }
-        return new ArrayList<Gravity>();
+        return List.of();
     }
 
     public static Direction getPrevGravtityDirection(Entity entity) {
@@ -139,7 +135,7 @@ public abstract class GravityChangerAPI {
         }
     }
 
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     public static void addGravityClient(ClientPlayerEntity entity, Gravity gravity, Identifier verifier, PacketByteBuf verifierInfo) {
         if(onCorrectSide(entity, false)) {
             if (EntityTags.canChangeGravity(entity)) {
@@ -165,7 +161,7 @@ public abstract class GravityChangerAPI {
         }
     }
 
-    public static void setGravity(Entity entity, ArrayList<Gravity> gravity) {
+    public static void setGravity(Entity entity, List<Gravity> gravity) {
         if(onCorrectSide(entity, true)) {
             if (EntityTags.canChangeGravity(entity)) {
                 maybeGetSafe(GRAVITY_COMPONENT, entity).ifPresent(gc -> {
@@ -175,8 +171,9 @@ public abstract class GravityChangerAPI {
             }
         }
     }
-    @Environment(EnvType.CLIENT)
-    public static void setGravityClient(ClientPlayerEntity entity, ArrayList<Gravity> gravity, Identifier verifier, PacketByteBuf verifierInfo) {
+
+    @ClientOnly
+    public static void setGravityClient(ClientPlayerEntity entity, List<Gravity> gravity, Identifier verifier, PacketByteBuf verifierInfo) {
         if(onCorrectSide(entity, false)) {
             if (EntityTags.canChangeGravity(entity)) {
                 maybeGetSafe(GRAVITY_COMPONENT, entity).ifPresent(gc -> {
@@ -202,7 +199,7 @@ public abstract class GravityChangerAPI {
         }
     }
 
-    public static void setDefualtGravityStrength(Entity entity, double strength) {
+    public static void setDefaultGravityStrength(Entity entity, double strength) {
         if(onCorrectSide(entity, true)) {
             if (EntityTags.canChangeGravity(entity)) {
                 maybeGetSafe(GRAVITY_COMPONENT, entity).ifPresent(gc -> {
@@ -217,7 +214,7 @@ public abstract class GravityChangerAPI {
         maybeGetSafe(GRAVITY_DIMENSION_STRENGTH_COMPONENT, world).ifPresent(component -> component.setDimensionGravityStrength(strength));
     }
 
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     public static void setIsInvertedClient(ClientPlayerEntity entity, boolean isInverted, RotationParameters rotationParameters, Identifier verifier, PacketByteBuf verifierInfo) {
         if(onCorrectSide(entity, false)) {
             if (EntityTags.canChangeGravity(entity)) {
@@ -243,7 +240,7 @@ public abstract class GravityChangerAPI {
             }
         }
     }
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     public static void clearGravityClient(ClientPlayerEntity entity, RotationParameters rotationParameters, Identifier verifier, PacketByteBuf verifierInfo) {
         if(onCorrectSide(entity, false)) {
             if (EntityTags.canChangeGravity(entity)) {
@@ -253,11 +250,6 @@ public abstract class GravityChangerAPI {
                 });
             }
         }
-    }
-
-    @Deprecated
-    public static void setDefaultGravityDirection(Entity entity, Direction gravityDirection, int animationDurationMs) {
-        setDefaultGravityDirection(entity, gravityDirection, new RotationParameters().rotationTime(animationDurationMs));
     }
 
     public static void setDefaultGravityDirection(Entity entity, Direction gravityDirection) {
@@ -274,7 +266,7 @@ public abstract class GravityChangerAPI {
             }
         }
     }
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     public static void setDefaultGravityDirectionClient(ClientPlayerEntity entity, Direction gravityDirection, RotationParameters rotationParameters, Identifier verifier, PacketByteBuf verifierInfo) {
         if(onCorrectSide(entity, false)) {
             if (EntityTags.canChangeGravity(entity)) {
@@ -293,7 +285,7 @@ public abstract class GravityChangerAPI {
     public static GravityComponent getGravityComponent(Entity entity){
         return maybeGetSafe(GRAVITY_COMPONENT, entity).orElse(null);
     }
-    
+
     /**
      * Returns the world relative velocity for the given player
      * Using minecraft's methods to get the velocity of a the player will return player relative velocity

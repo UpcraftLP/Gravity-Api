@@ -8,20 +8,20 @@ import net.minecraft.network.PacketByteBuf;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Optional;
+import java.util.List;
 
 public class OverwriteGravityPacket extends GravityPacket {
-    public final ArrayList<Gravity> gravityList;
+    public final List<Gravity> gravityList;
     public final boolean initialGravity;
 
-    public OverwriteGravityPacket(ArrayList<Gravity> _gravityList, boolean _initialGravity){
+    public OverwriteGravityPacket(List<Gravity> _gravityList, boolean _initialGravity){
         gravityList = _gravityList;
         initialGravity = _initialGravity;
     }
 
     public OverwriteGravityPacket(PacketByteBuf buf) {
-        int listSize = buf.readInt();
-        gravityList = new ArrayList<>();
+        int listSize = buf.readVarInt();
+        gravityList = new ArrayList<>(listSize);
         for (int i = 0; i < listSize; i++)
             gravityList.add(NetworkUtil.readGravity(buf));
         initialGravity = buf.readBoolean();
@@ -29,7 +29,7 @@ public class OverwriteGravityPacket extends GravityPacket {
 
     @Override
     public void write(PacketByteBuf buf) {
-        buf.writeInt(gravityList.size());
+        buf.writeVarInt(gravityList.size());
         for (Gravity gravity : gravityList) NetworkUtil.writeGravity(buf, gravity);
         buf.writeBoolean(initialGravity);
     }
@@ -41,8 +41,7 @@ public class OverwriteGravityPacket extends GravityPacket {
 
     @Override
     public RotationParameters getRotationParameters() {
-        Optional<Gravity> max = gravityList.stream().max(Comparator.comparingInt(Gravity::priority));
-        if(max.isEmpty()) return new RotationParameters();
-        return max.get().rotationParameters();
+        return gravityList.stream().max(Comparator.comparingInt(Gravity::priority)).map(Gravity::rotationParameters)
+                .orElseGet(RotationParameters::new);
     }
 }

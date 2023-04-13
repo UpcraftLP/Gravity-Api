@@ -1,6 +1,5 @@
 package com.fusionflux.gravity_api.util;
 
-import com.fusionflux.gravity_api.GravityChangerMod;
 import com.fusionflux.gravity_api.RotationAnimation;
 import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import com.fusionflux.gravity_api.api.RotationParameters;
@@ -9,7 +8,6 @@ import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.decoration.EndCrystalEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -22,10 +20,7 @@ import net.minecraft.util.shape.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Objects;
+import java.util.*;
 
 public class GravityDirectionComponent implements GravityComponent {
     Direction gravityDirection = Direction.DOWN;
@@ -36,19 +31,19 @@ public class GravityDirectionComponent implements GravityComponent {
     boolean isInverted = false;
     RotationAnimation animation = new RotationAnimation();
     boolean needsInitialSync = false;
-    
+
     ArrayList<Gravity> gravityList = new ArrayList<>();
-    
+
     private final Entity entity;
-    
+
     public GravityDirectionComponent(Entity entity) {
         this.entity = entity;
     }
-    
+
     public void onGravityChanged(Direction oldGravity, Direction newGravity, RotationParameters rotationParameters, boolean initialGravity) {
         entity.fallDistance = 0;
         entity.setPosition(entity.getPos());//Causes bounding box recalculation
-        
+
         if (!initialGravity) {
             if(!(entity instanceof ServerPlayerEntity)) {
                 //A relativeRotationCentre of zero will result in zero translation
@@ -81,7 +76,7 @@ public class GravityDirectionComponent implements GravityComponent {
             }
         }
     }
-    
+
     // getVelocity() does not return the actual velocity. It returns the velocity plus acceleration.
     // Even if the entity is standing still, getVelocity() will still give a downwards vector.
     // The real velocity is this tick position subtract last tick position
@@ -93,10 +88,10 @@ public class GravityDirectionComponent implements GravityComponent {
                 entity.getZ() - entity.prevZ
             );
         }
-        
+
         return RotationUtil.vecPlayerToWorld(entity.getVelocity(), prevGravityDirection);
     }
-    
+
     private boolean shouldChangeVelocity() {
         if(entity instanceof FishingBobberEntity) return true;
         if(entity instanceof FireworkRocketEntity) return true;
@@ -127,13 +122,13 @@ public class GravityDirectionComponent implements GravityComponent {
         if (entity instanceof AreaEffectCloudEntity || entity instanceof PersistentProjectileEntity || entity instanceof EndCrystalEntity) {
             return;
         }
-        
+
         Box entityBoundingBox = entity.getBoundingBox();
-        
+
         // for example, if gravity changed from down to north, move up
         // if gravity changed from down to up, also move up
         Direction movingDirection = oldGravity.getOpposite();
-        
+
         Iterable<VoxelShape> collisions = entity.world.getCollisions(entity, entityBoundingBox);
         Box totalCollisionBox = null;
         for (VoxelShape collision : collisions) {
@@ -147,14 +142,14 @@ public class GravityDirectionComponent implements GravityComponent {
                 }
             }
         }
-        
+
         if (totalCollisionBox != null) {
             entity.setPosition(entity.getPos().add(getPositionAdjustmentOffset(
                 entityBoundingBox, totalCollisionBox, movingDirection
             )));
         }
     }
-    
+
     private static Vec3d getPositionAdjustmentOffset(
         Box entityBoundingBox, Box nearbyCollisionUnion, Direction movingDirection
     ) {
@@ -174,7 +169,7 @@ public class GravityDirectionComponent implements GravityComponent {
                 offset = pushed - pushing;
             }
         }
-        
+
         return new Vec3d(movingDirection.getUnitVector()).multiply(offset);
     }
 
@@ -207,11 +202,11 @@ public class GravityDirectionComponent implements GravityComponent {
         }
         return Direction.DOWN;
     }
-    
+
     private boolean canChangeGravity() {
         return EntityTags.canChangeGravity(entity);
     }
-    
+
     @Override
     public Direction getPrevGravityDirection() {
         if (canChangeGravity()) {
@@ -219,7 +214,7 @@ public class GravityDirectionComponent implements GravityComponent {
         }
         return Direction.DOWN;
     }
-    
+
     @Override
     public Direction getDefaultGravityDirection() {
         if (canChangeGravity()) {
@@ -248,7 +243,7 @@ public class GravityDirectionComponent implements GravityComponent {
             }
         }
     }
-    
+
     @Override
     public Direction getActualGravityDirection() {
         Direction newGravity = getDefaultGravityDirection();
@@ -278,7 +273,7 @@ public class GravityDirectionComponent implements GravityComponent {
             updateGravity(rotationParameters, initialGravity);
         }
     }
-    
+
     @Override
     public void addGravity(Gravity gravity, boolean initialGravity) {
         if (canChangeGravity()) {
@@ -288,14 +283,14 @@ public class GravityDirectionComponent implements GravityComponent {
             updateGravity(gravity.rotationParameters(), initialGravity);
         }
     }
-    
+
     @Override
-    public ArrayList<Gravity> getGravity() {
+    public List<Gravity> getGravity() {
         return gravityList;
     }
 
     @Override
-    public void setGravity(ArrayList<Gravity> _gravityList, boolean initialGravity) {
+    public void setGravity(List<Gravity> _gravityList, boolean initialGravity) {
         Gravity highestBefore = getHighestPriority();
         gravityList = _gravityList;
         Gravity highestAfter = getHighestPriority();
@@ -317,7 +312,7 @@ public class GravityDirectionComponent implements GravityComponent {
         isInverted = _isInverted;
         updateGravity(rotationParameters, initialGravity);
     }
-    
+
     @Override
     public boolean getInvertGravity() {
         return this.isInverted;
@@ -328,12 +323,12 @@ public class GravityDirectionComponent implements GravityComponent {
         gravityList.clear();
         updateGravity(rotationParameters, initialGravity);
     }
-    
+
     @Override
     public RotationAnimation getGravityAnimation() {
         return animation;
     }
-    
+
     @Override
     public void readFromNbt(NbtCompound nbt) {
         //Store old values
@@ -372,7 +367,7 @@ public class GravityDirectionComponent implements GravityComponent {
         if (oldList.isEmpty() != gravityList.isEmpty()) needsInitialSync = true;
         if (oldIsInverted != isInverted) needsInitialSync = true;
     }
-    
+
     @Override
     public void writeToNbt(@NotNull NbtCompound nbt) {
         int index = 0;

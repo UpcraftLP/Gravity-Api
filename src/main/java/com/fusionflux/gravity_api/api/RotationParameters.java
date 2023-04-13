@@ -1,26 +1,26 @@
 package com.fusionflux.gravity_api.api;
 
-import com.fusionflux.gravity_api.GravityChangerMod;
+import com.fusionflux.gravity_api.config.GravityChangerConfig;
 
 public class RotationParameters {
     private boolean rotateVelocity;
     private boolean rotateView;
     private boolean alternateCenter;
-    private int rotationTime;//Milliseconds
+    private int rotationTimeMs;//Milliseconds
     public RotationParameters(){
         this(
-                GravityChangerMod.config.worldVelocity,
-                !GravityChangerMod.config.keepWorldLook,
+                GravityChangerConfig.worldVelocity,
+                !GravityChangerConfig.keepWorldLook,
                 false,
-                GravityChangerMod.config.rotationTime
+                GravityChangerConfig.rotationTime
         );
     }
 
-    public RotationParameters(boolean _rotateVelocity, boolean _rotateView, boolean _alternateCenter, int _rotationTime){
+    public RotationParameters(boolean _rotateVelocity, boolean _rotateView, boolean _alternateCenter, int _rotationTimeMs){
         rotateVelocity = _rotateVelocity;
         rotateView = _rotateView;
         alternateCenter = _alternateCenter;
-        rotationTime = _rotationTime;
+        rotationTimeMs = _rotationTimeMs;
     }
 
     public boolean rotateVelocity() {
@@ -36,7 +36,7 @@ public class RotationParameters {
     }
 
     public int rotationTime() {
-        return rotationTime;
+        return rotationTimeMs;
     }
 
     public RotationParameters rotateVelocity(boolean rotateVelocity) {
@@ -55,7 +55,7 @@ public class RotationParameters {
     }
 
     public RotationParameters rotationTime(int rotationTime) {
-        this.rotationTime = rotationTime;
+        this.rotationTimeMs = rotationTime;
         return this;
     }
 }

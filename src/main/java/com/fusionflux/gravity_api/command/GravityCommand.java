@@ -1,8 +1,8 @@
 package com.fusionflux.gravity_api.command;
 
 import com.fusionflux.gravity_api.api.GravityChangerAPI;
-import com.fusionflux.gravity_api.util.Gravity;
 import com.fusionflux.gravity_api.api.RotationParameters;
+import com.fusionflux.gravity_api.util.Gravity;
 import com.fusionflux.gravity_api.util.RotationUtil;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
@@ -10,14 +10,15 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
-import static net.minecraft.server.command.CommandManager.argument;
-import static net.minecraft.server.command.CommandManager.literal;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Direction;
 
 import java.util.Collection;
 import java.util.Collections;
+
+import static net.minecraft.server.command.CommandManager.argument;
+import static net.minecraft.server.command.CommandManager.literal;
 
 public class GravityCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
@@ -119,7 +120,7 @@ public class GravityCommand {
         int i = 0;
         for (Entity entity : entities) {
             if (GravityChangerAPI.getDefaultGravityStrength(entity) != gravityStrength) {
-                GravityChangerAPI.setDefualtGravityStrength(entity, gravityStrength);
+                GravityChangerAPI.setDefaultGravityStrength(entity, gravityStrength);
                 getStrengthSendFeedback(source, entity, gravityStrength);
                 i++;
             }

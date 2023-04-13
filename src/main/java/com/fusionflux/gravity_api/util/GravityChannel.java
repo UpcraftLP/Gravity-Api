@@ -3,10 +3,6 @@ package com.fusionflux.gravity_api.util;
 import com.fusionflux.gravity_api.GravityChangerMod;
 import com.fusionflux.gravity_api.api.RotationParameters;
 import com.fusionflux.gravity_api.util.packet.*;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.Entity;
@@ -15,8 +11,10 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
-
-import static com.fusionflux.gravity_api.util.NetworkUtil.*;
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
+import org.quiltmc.qsl.networking.api.PacketSender;
+import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
+import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 
 public class GravityChannel<P extends GravityPacket> {
     public static GravityChannel<OverwriteGravityPacket> OVERWRITE_GRAVITY = new GravityChannel<>(OverwriteGravityPacket::new, GravityChangerMod.id("overwrite_gravity_list"));
@@ -35,19 +33,17 @@ public class GravityChannel<P extends GravityPacket> {
         gravityVerifierRegistry = new GravityVerifierRegistry<>();
     }
 
-    public void sendToClient(Entity entity, P packet, PacketMode mode){
+    public void sendToClient(Entity entity, P packet, NetworkUtil.PacketMode mode){
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeInt(entity.getId());
         packet.write(buf);
-        sendToTracking(entity, channel, buf, mode);
+        NetworkUtil.sendToTracking(entity, channel, buf, mode);
     }
 
     public void receiveFromServer(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender){
         int entityId = buf.readInt();
         P packet = packetFactory.read(buf);
-        client.execute(() -> {
-            getGravityComponent(client, entityId).ifPresent(packet::run);
-        });
+        client.execute(() -> NetworkUtil.getGravityComponent(client, entityId).ifPresent(packet::run));
     }
 
     public void sendToServer(P packet, Identifier verifier, PacketByteBuf verifierInfoBuf){
@@ -64,21 +60,21 @@ public class GravityChannel<P extends GravityPacket> {
         PacketByteBuf verifierInfoBuf = PacketByteBufs.create();
         verifierInfoBuf.writeBytes(buf.readByteArray());
         server.execute(() -> {
-            getGravityComponent(player).ifPresent(gc -> {
+            NetworkUtil.getGravityComponent(player).ifPresent(gc -> {
                 GravityVerifierRegistry.VerifierFunction<P> v = gravityVerifierRegistry.get(verifier);
                 if (v != null && v.check(player, verifierInfoBuf, packet)) {
                     packet.run(gc);
-                    sendToClient(player, packet, PacketMode.EVERYONE_BUT_SELF);
+                    sendToClient(player, packet, NetworkUtil.PacketMode.EVERYONE_BUT_SELF);
                 }else {
                     GravityChangerMod.LOGGER.info("VerifierFunction returned FALSE");
-                    sendFullStatePacket(player, PacketMode.ONLY_SELF, packet.getRotationParameters(), false);
+                    sendFullStatePacket(player, NetworkUtil.PacketMode.ONLY_SELF, packet.getRotationParameters(), false);
                 }
             });
         });
     }
 
-    public static void sendFullStatePacket(Entity entity, PacketMode mode, RotationParameters rp, boolean initialGravity){
-        getGravityComponent(entity).ifPresent(gc -> {
+    public static void sendFullStatePacket(Entity entity, NetworkUtil.PacketMode mode, RotationParameters rp, boolean initialGravity){
+        NetworkUtil.getGravityComponent(entity).ifPresent(gc -> {
             OVERWRITE_GRAVITY.sendToClient(entity, new OverwriteGravityPacket(gc.getGravity(), initialGravity), mode);
             DEFAULT_GRAVITY.sendToClient(entity, new DefaultGravityPacket(gc.getDefaultGravityDirection(), rp, initialGravity), mode);
             INVERT_GRAVITY.sendToClient(entity, new InvertGravityPacket(gc.getInvertGravity(), rp, initialGravity), mode);
