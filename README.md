@@ -7,8 +7,10 @@ These items are currently uncraftable and can be found in the tools tab of creat
 This mod can also be used as an api to let other mods change player gravity.
 
 ## Required Dependencies
-[Fabric Api](https://github.com/FabricMC/fabric)  
-[Cloth Config](https://github.com/shedaniel/cloth-config)
+[Cardinal Components API](https://github.com/OnyxStudios/Cardinal-Components-API) (`base`, `entity` and `world`)
+[Mixin Extras](https://github.com/LlamaLad7/MixinExtras)
+[Quilted Fabric API](https://github.com/QuiltMC/quilted-fabric-api)
+
 
 ## Optional Dependencies
 [Mod Menu](https://github.com/TerraformersMC/ModMenu)
