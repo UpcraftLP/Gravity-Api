@@ -1,14 +1,19 @@
 plugins {
-	id 'org.quiltmc.loom' version '1.0.+'
-	id 'maven-publish'
+	id "org.quiltmc.loom" version "1.+"
+	id "maven-publish"
 }
-
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
 version = "${project.mod_version}-${project.minecraft_version}"
 group = "Gaider10"
+
+def javaVersion = 17
+
+java {
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(javaVersion))
+	}
+}
 
 repositories {
 	maven {
@@ -43,7 +48,6 @@ dependencies {
 
 	include modImplementation("com.github.LlamaLad7.MixinExtras:mixinextras-fabric:${project.mixin_extras_version}")
 	annotationProcessor("com.github.LlamaLad7.MixinExtras:mixinextras-fabric:${project.mixin_extras_version}")
-
 }
 
 processResources {
@@ -56,7 +60,6 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
 	it.options.encoding = "UTF-8"
-	it.options.release = 17
 }
 
 jar {
