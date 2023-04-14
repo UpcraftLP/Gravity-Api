@@ -23,7 +23,7 @@ public abstract class PistonBlockEntityMixin {
     )
     private static Vec3d redirect_moveEntity_Vec3d_0(double x, double y, double z, Direction direction, Entity entity, double d, Direction direction2) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return new Vec3d(x, y, z);
         }
 

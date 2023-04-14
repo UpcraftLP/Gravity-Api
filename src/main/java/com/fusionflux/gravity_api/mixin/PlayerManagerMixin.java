@@ -1,6 +1,5 @@
 package com.fusionflux.gravity_api.mixin;
 
-import com.fusionflux.gravity_api.api.GravityChangerAPI;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;

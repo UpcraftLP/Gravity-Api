@@ -19,9 +19,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityShapeContext.class)
 public abstract class EntityShapeContextMixin {
-    @Shadow @Final private Entity entity;
+    @Shadow
+    @Final
+    private Entity entity;
 
-    @Shadow @Final private double minY;
+    @Shadow
+    @Final
+    private double minY;
 
     @Redirect(
             method = "<init>(Lnet/minecraft/entity/Entity;)V",
@@ -33,7 +37,7 @@ public abstract class EntityShapeContextMixin {
     )
     private static double redirect_init_getY_0(Entity entity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return entity.getY();
         }
 
@@ -46,10 +50,10 @@ public abstract class EntityShapeContextMixin {
             cancellable = true
     )
     private void inject_isAbove(VoxelShape shape, BlockPos pos, boolean defaultValue, CallbackInfoReturnable<Boolean> cir) {
-        if(this.entity == null) return;
+        if (this.entity == null) return;
 
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.entity);
-        if(gravityDirection == Direction.DOWN) return;
+        if (gravityDirection == Direction.DOWN) return;
 
         cir.setReturnValue(this.minY > RotationUtil.boxWorldToPlayer(new Box(pos), gravityDirection).minY + RotationUtil.boxWorldToPlayer(shape.getBoundingBox().expand(-9.999999747378752E-6D), gravityDirection).maxX);
     }

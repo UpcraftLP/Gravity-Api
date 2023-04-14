@@ -21,7 +21,7 @@ public abstract class LookAtEntityGoalMixin {
     )
     private double redirect_tick_getEyeY_0(Entity entity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return entity.getEyeY();
         }
 
@@ -38,7 +38,7 @@ public abstract class LookAtEntityGoalMixin {
     )
     private double redirect_tick_getX_0(Entity entity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return entity.getX();
         }
 
@@ -55,7 +55,7 @@ public abstract class LookAtEntityGoalMixin {
     )
     private double redirect_tick_getZ_0(Entity entity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return entity.getZ();
         }
 

@@ -10,12 +10,12 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 @Mixin(LlamaSpitEntity.class)
 public class LlamaSpitEntityMixin {
     @ModifyArg(
-        method = "tick",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/util/math/Vec3d;add(DDD)Lnet/minecraft/util/math/Vec3d;"
-        ),
-        index = 1
+            method = "tick",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/util/math/Vec3d;add(DDD)Lnet/minecraft/util/math/Vec3d;"
+            ),
+            index = 1
     )
     private double multiplyGravity(double x) {
         return x * GravityChangerAPI.getGravityStrength(((Entity) (Object) this));

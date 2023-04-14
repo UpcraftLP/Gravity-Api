@@ -21,7 +21,7 @@ public abstract class WolfBegGoalMixin {
     )
     private double redirect_tick_getEyeY_0(PlayerEntity playerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(playerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return playerEntity.getEyeY();
         }
 
@@ -38,7 +38,7 @@ public abstract class WolfBegGoalMixin {
     )
     private double redirect_tick_getX_0(PlayerEntity playerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(playerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return playerEntity.getX();
         }
 
@@ -55,7 +55,7 @@ public abstract class WolfBegGoalMixin {
     )
     private double redirect_tick_getZ_0(PlayerEntity playerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(playerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return playerEntity.getZ();
         }
 

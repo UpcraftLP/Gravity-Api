@@ -19,31 +19,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(ThrownEntity.class)
-public abstract class ThrownEntityMixin{
-
-    @Shadow protected abstract float getGravity();
-
-    /*@Override
-    public Direction gravitychanger$getAppliedGravityDirection() {
-        return GravityChangerAPI.getGravityDirection((ThrownEntity)(Object)this);
-    }*/
-
-    @ModifyVariable(
-            method = "tick",
-            at = @At(
-                    value = "STORE"
-            )
-            ,ordinal = 0
-    )
-    public Vec3d tick(Vec3d modify){
-        //if(this instanceof RotatableEntityAccessor) {
-            modify = new Vec3d(modify.x, modify.y + this.getGravity(), modify.z);
-            modify = RotationUtil.vecWorldToPlayer(modify, GravityChangerAPI.getGravityDirection((ThrownEntity)(Object)this));
-            modify = new Vec3d(modify.x, modify.y - this.getGravity(), modify.z);
-            modify = RotationUtil.vecPlayerToWorld(modify, GravityChangerAPI.getGravityDirection((ThrownEntity)(Object)this));
-       // }
-        return  modify;
-    }
+public abstract class ThrownEntityMixin {
 
     @ModifyArgs(
             method = "<init>(Lnet/minecraft/entity/EntityType;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/world/World;)V",
@@ -55,7 +31,7 @@ public abstract class ThrownEntityMixin{
     )
     private static void modifyargs_init_init_0(Args args, EntityType<? extends ThrownEntity> type, LivingEntity owner, World world) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(owner);
-        if(gravityDirection == Direction.DOWN) return;
+        if (gravityDirection == Direction.DOWN) return;
 
         Vec3d pos = owner.getEyePos().subtract(RotationUtil.vecPlayerToWorld(0.0D, 0.10000000149011612D, 0.0D, gravityDirection));
         args.set(1, pos.x);
@@ -63,8 +39,33 @@ public abstract class ThrownEntityMixin{
         args.set(3, pos.z);
     }
 
+    /*@Override
+    public Direction gravitychanger$getAppliedGravityDirection() {
+        return GravityChangerAPI.getGravityDirection((ThrownEntity)(Object)this);
+    }*/
+
+    @Shadow
+    protected abstract float getGravity();
+
+    @ModifyVariable(
+            method = "tick",
+            at = @At(
+                    value = "STORE"
+            )
+            , ordinal = 0
+    )
+    public Vec3d tick(Vec3d modify) {
+        //if(this instanceof RotatableEntityAccessor) {
+        modify = new Vec3d(modify.x, modify.y + this.getGravity(), modify.z);
+        modify = RotationUtil.vecWorldToPlayer(modify, GravityChangerAPI.getGravityDirection((ThrownEntity) (Object) this));
+        modify = new Vec3d(modify.x, modify.y - this.getGravity(), modify.z);
+        modify = RotationUtil.vecPlayerToWorld(modify, GravityChangerAPI.getGravityDirection((ThrownEntity) (Object) this));
+        // }
+        return modify;
+    }
+
     @ModifyReturnValue(method = "getGravity", at = @At("RETURN"))
     private float multiplyGravity(float original) {
-        return original * (float)GravityChangerAPI.getGravityStrength(((Entity) (Object) this));
+        return original * (float) GravityChangerAPI.getGravityStrength(((Entity) (Object) this));
     }
 }

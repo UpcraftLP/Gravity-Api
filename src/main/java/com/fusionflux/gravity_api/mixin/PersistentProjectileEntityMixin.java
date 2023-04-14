@@ -22,23 +22,6 @@ public abstract class PersistentProjectileEntityMixin extends Entity {
         super(type, world);
     }
 
-
-    @ModifyVariable(
-            method = "tick",
-            at = @At(
-                    value = "STORE"
-            )
-            ,ordinal = 0
-    )
-    public Vec3d tick(Vec3d modify){
-        modify = new Vec3d(modify.x, modify.y+0.05, modify.z);
-        modify = RotationUtil.vecWorldToPlayer(modify,GravityChangerAPI.getGravityDirection(this));
-        modify = new Vec3d(modify.x, modify.y-0.05, modify.z);
-        modify = RotationUtil.vecPlayerToWorld(modify,GravityChangerAPI.getGravityDirection(this));
-        return  modify;
-    }
-
-
     @ModifyArgs(
             method = "<init>(Lnet/minecraft/entity/EntityType;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/world/World;)V",
             at = @At(
@@ -49,12 +32,27 @@ public abstract class PersistentProjectileEntityMixin extends Entity {
     )
     private static void modifyargs_init_init_0(Args args, EntityType<? extends ThrownEntity> type, LivingEntity owner, World world) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(owner);
-        if(gravityDirection == Direction.DOWN) return;
+        if (gravityDirection == Direction.DOWN) return;
 
         Vec3d pos = owner.getEyePos().subtract(RotationUtil.vecPlayerToWorld(0.0D, 0.10000000149011612D, 0.0D, gravityDirection));
         args.set(1, pos.x);
         args.set(2, pos.y);
         args.set(3, pos.z);
+    }
+
+    @ModifyVariable(
+            method = "tick",
+            at = @At(
+                    value = "STORE"
+            )
+            , ordinal = 0
+    )
+    public Vec3d tick(Vec3d modify) {
+        modify = new Vec3d(modify.x, modify.y + 0.05, modify.z);
+        modify = RotationUtil.vecWorldToPlayer(modify, GravityChangerAPI.getGravityDirection(this));
+        modify = new Vec3d(modify.x, modify.y - 0.05, modify.z);
+        modify = RotationUtil.vecPlayerToWorld(modify, GravityChangerAPI.getGravityDirection(this));
+        return modify;
     }
 
     @ModifyConstant(method = "tick", constant = @Constant(doubleValue = 0.05000000074505806))

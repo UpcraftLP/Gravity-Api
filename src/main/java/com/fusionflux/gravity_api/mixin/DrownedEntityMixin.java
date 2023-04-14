@@ -22,7 +22,7 @@ public abstract class DrownedEntityMixin {
     )
     private double redirect_attack_getX_0(LivingEntity target) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return target.getX();
         }
 
@@ -39,7 +39,7 @@ public abstract class DrownedEntityMixin {
     )
     private double redirect_attack_getBodyY_0(LivingEntity target, double heightScale) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return target.getBodyY(heightScale);
         }
 
@@ -56,7 +56,7 @@ public abstract class DrownedEntityMixin {
     )
     private double redirect_attack_getZ_0(LivingEntity target) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return target.getZ();
         }
 
@@ -72,7 +72,7 @@ public abstract class DrownedEntityMixin {
     )
     private double redirect_attack_sqrt_0(double value, LivingEntity target, float pullProgress) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return Math.sqrt(value);
         }
 

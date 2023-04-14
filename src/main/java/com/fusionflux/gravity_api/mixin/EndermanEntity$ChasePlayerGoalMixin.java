@@ -22,7 +22,7 @@ public abstract class EndermanEntity$ChasePlayerGoalMixin {
     )
     private double redirect_tick_getEyeY_0(LivingEntity livingEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(livingEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return livingEntity.getEyeY();
         }
 
@@ -39,7 +39,7 @@ public abstract class EndermanEntity$ChasePlayerGoalMixin {
     )
     private double redirect_tick_getX_0(LivingEntity livingEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(livingEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return livingEntity.getX();
         }
 
@@ -56,7 +56,7 @@ public abstract class EndermanEntity$ChasePlayerGoalMixin {
     )
     private double redirect_tick_getZ_0(LivingEntity livingEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(livingEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return livingEntity.getZ();
         }
 

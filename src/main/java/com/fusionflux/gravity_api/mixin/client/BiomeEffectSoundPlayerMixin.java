@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(BiomeEffectSoundPlayer.class)
 public abstract class BiomeEffectSoundPlayerMixin {
     @Redirect(
-            method = {"m_hhelwrkg","method_26271"},
+            method = {"m_hhelwrkg", "method_26271"},
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/network/ClientPlayerEntity;getEyeY()D",
@@ -21,7 +21,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     )
     private double redirect_method_26271_getEyeY_0(ClientPlayerEntity clientPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(clientPlayerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return clientPlayerEntity.getEyeY();
         }
 
@@ -38,7 +38,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     )
     private double redirect_method_26271_getX_0(ClientPlayerEntity clientPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(clientPlayerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return clientPlayerEntity.getX();
         }
 
@@ -55,7 +55,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     )
     private double redirect_method_26271_getZ_0(ClientPlayerEntity clientPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(clientPlayerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return clientPlayerEntity.getZ();
         }
 
@@ -63,7 +63,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     }
 
     @Redirect(
-            method = {"m_hhelwrkg","method_26271"},
+            method = {"m_hhelwrkg", "method_26271"},
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/network/ClientPlayerEntity;getEyeY()D",
@@ -72,7 +72,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     )
     private double redirect_method_26271_getEyeY_1(ClientPlayerEntity clientPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(clientPlayerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return clientPlayerEntity.getEyeY();
         }
 
@@ -80,7 +80,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     }
 
     @Redirect(
-            method = {"m_hhelwrkg","method_26271"},
+            method = {"m_hhelwrkg", "method_26271"},
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/network/ClientPlayerEntity;getX()D",
@@ -89,7 +89,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     )
     private double redirect_method_26271_getX_1(ClientPlayerEntity clientPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(clientPlayerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return clientPlayerEntity.getX();
         }
 
@@ -97,7 +97,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     }
 
     @Redirect(
-            method = {"m_hhelwrkg","method_26271"},
+            method = {"m_hhelwrkg", "method_26271"},
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/network/ClientPlayerEntity;getZ()D",
@@ -106,7 +106,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     )
     private double redirect_method_26271_getZ_1(ClientPlayerEntity clientPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(clientPlayerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return clientPlayerEntity.getZ();
         }
 
@@ -114,7 +114,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     }
 
     @Redirect(
-            method = {"m_hhelwrkg","method_26271"},
+            method = {"m_hhelwrkg", "method_26271"},
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/network/ClientPlayerEntity;getEyeY()D",
@@ -123,7 +123,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     )
     private double redirect_method_26271_getEyeY_2(ClientPlayerEntity clientPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(clientPlayerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return clientPlayerEntity.getEyeY();
         }
 
@@ -131,7 +131,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     }
 
     @Redirect(
-            method = {"m_hhelwrkg","method_26271"},
+            method = {"m_hhelwrkg", "method_26271"},
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/network/ClientPlayerEntity;getX()D",
@@ -140,7 +140,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     )
     private double redirect_method_26271_getX_2(ClientPlayerEntity clientPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(clientPlayerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return clientPlayerEntity.getX();
         }
 
@@ -148,7 +148,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     }
 
     @Redirect(
-            method = {"m_hhelwrkg","method_26271"},
+            method = {"m_hhelwrkg", "method_26271"},
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/network/ClientPlayerEntity;getZ()D",
@@ -157,7 +157,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     )
     private double redirect_method_26271_getZ_2(ClientPlayerEntity clientPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(clientPlayerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return clientPlayerEntity.getZ();
         }
 

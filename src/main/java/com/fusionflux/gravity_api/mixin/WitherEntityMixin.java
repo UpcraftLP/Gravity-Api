@@ -23,7 +23,7 @@ public abstract class WitherEntityMixin {
     )
     private double redirect_shootSkullAt_getX_0(LivingEntity target) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return target.getX();
         }
 
@@ -40,7 +40,7 @@ public abstract class WitherEntityMixin {
     )
     private double redirect_shootSkullAt_getY_0(LivingEntity target) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return target.getX();
         }
 
@@ -57,7 +57,7 @@ public abstract class WitherEntityMixin {
     )
     private double redirect_shootSkullAt_getZ_0(LivingEntity target) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return target.getX();
         }
 
@@ -74,7 +74,7 @@ public abstract class WitherEntityMixin {
     )
     private double redirect_tickMovement_getEyeY_0(Entity entity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return entity.getEyeY();
         }
 
@@ -91,7 +91,7 @@ public abstract class WitherEntityMixin {
     )
     private double redirect_tickMovement_getX_0(Entity entity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return entity.getX();
         }
 
@@ -108,7 +108,7 @@ public abstract class WitherEntityMixin {
     )
     private double redirect_tickMovement_getZ_0(Entity entity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return entity.getZ();
         }
 

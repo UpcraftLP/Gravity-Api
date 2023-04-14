@@ -14,13 +14,14 @@ public abstract class TntEntityMixin extends Entity {
     public TntEntityMixin(EntityType<?> type, World world) {
         super(type, world);
     }
+
     @ModifyArg(
-        method = "tick",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/util/math/Vec3d;add(DDD)Lnet/minecraft/util/math/Vec3d;"
-        ),
-        index = 1
+            method = "tick",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/util/math/Vec3d;add(DDD)Lnet/minecraft/util/math/Vec3d;"
+            ),
+            index = 1
     )
     private double multiplyGravity(double x) {
         return x * GravityChangerAPI.getGravityStrength(this);
