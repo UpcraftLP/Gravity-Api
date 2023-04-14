@@ -7,8 +7,8 @@
     "version": "${version}",
     "entrypoints": {
       "pre_Launch": "com.llamalad7.mixinextras.MixinExtrasBootstrap::init",
-      "main": "com.fusionflux.gravity_api.GravityChangerMod",
-      "client": "com.fusionflux.gravity_api.ClientInit",
+      "init": "com.fusionflux.gravity_api.GravityChangerMod",
+      "client_init": "com.fusionflux.gravity_api.ClientInit",
       "modmenu": "com.fusionflux.gravity_api.ModMenuIntegration",
       "cardinal-components": "com.fusionflux.gravity_api.util.GravityChangerComponents"
     },
