@@ -11,6 +11,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.PacketSender;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
@@ -27,53 +28,13 @@ public class GravityChannel<P extends GravityPacket> {
     private final Identifier channel;
     private final GravityVerifierRegistry<P> gravityVerifierRegistry;
 
-    GravityChannel(Factory<P> _packetFactory, Identifier _channel){
+    GravityChannel(Factory<P> _packetFactory, Identifier _channel) {
         packetFactory = _packetFactory;
         channel = _channel;
         gravityVerifierRegistry = new GravityVerifierRegistry<>();
     }
 
-    public void sendToClient(Entity entity, P packet, NetworkUtil.PacketMode mode){
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeInt(entity.getId());
-        packet.write(buf);
-        NetworkUtil.sendToTracking(entity, channel, buf, mode);
-    }
-
-    public void receiveFromServer(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender){
-        int entityId = buf.readInt();
-        P packet = packetFactory.read(buf);
-        client.execute(() -> NetworkUtil.getGravityComponent(client, entityId).ifPresent(packet::run));
-    }
-
-    public void sendToServer(P packet, Identifier verifier, PacketByteBuf verifierInfoBuf){
-        PacketByteBuf buf = PacketByteBufs.create();
-        packet.write(buf);
-        buf.writeIdentifier(verifier);
-        buf.writeByteArray(verifierInfoBuf.array());
-        ClientPlayNetworking.send(channel, buf);
-    }
-
-    public void receiveFromClient(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender){
-        P packet = packetFactory.read(buf);
-        Identifier verifier = buf.readIdentifier();
-        PacketByteBuf verifierInfoBuf = PacketByteBufs.create();
-        verifierInfoBuf.writeBytes(buf.readByteArray());
-        server.execute(() -> {
-            NetworkUtil.getGravityComponent(player).ifPresent(gc -> {
-                GravityVerifierRegistry.VerifierFunction<P> v = gravityVerifierRegistry.get(verifier);
-                if (v != null && v.check(player, verifierInfoBuf, packet)) {
-                    packet.run(gc);
-                    sendToClient(player, packet, NetworkUtil.PacketMode.EVERYONE_BUT_SELF);
-                }else {
-                    GravityChangerMod.LOGGER.info("VerifierFunction returned FALSE");
-                    sendFullStatePacket(player, NetworkUtil.PacketMode.ONLY_SELF, packet.getRotationParameters(), false);
-                }
-            });
-        });
-    }
-
-    public static void sendFullStatePacket(Entity entity, NetworkUtil.PacketMode mode, RotationParameters rp, boolean initialGravity){
+    public static void sendFullStatePacket(Entity entity, NetworkUtil.PacketMode mode, RotationParameters rp, boolean initialGravity) {
         NetworkUtil.getGravityComponent(entity).ifPresent(gc -> {
             OVERWRITE_GRAVITY.sendToClient(entity, new OverwriteGravityPacket(gc.getGravity(), initialGravity), mode);
             DEFAULT_GRAVITY.sendToClient(entity, new DefaultGravityPacket(gc.getDefaultGravityDirection(), rp, initialGravity), mode);
@@ -82,18 +43,7 @@ public class GravityChannel<P extends GravityPacket> {
         });
     }
 
-    public GravityVerifierRegistry<P> getVerifierRegistry(){
-        return gravityVerifierRegistry;
-    }
-
-    public void registerClientReceiver(){
-        ClientPlayNetworking.registerGlobalReceiver(channel, this::receiveFromServer);
-    }
-
-    public void registerServerReceiver(){
-        ServerPlayNetworking.registerGlobalReceiver(channel, this::receiveFromClient);
-    }
-
+    @ClientOnly
     public static void initClient() {
         DEFAULT_GRAVITY.registerClientReceiver();
         UPDATE_GRAVITY.registerClientReceiver();
@@ -108,6 +58,58 @@ public class GravityChannel<P extends GravityPacket> {
         OVERWRITE_GRAVITY.registerServerReceiver();
         INVERT_GRAVITY.registerServerReceiver();
         DEFAULT_GRAVITY_STRENGTH.registerServerReceiver();
+    }
+
+    public void sendToClient(Entity entity, P packet, NetworkUtil.PacketMode mode) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeInt(entity.getId());
+        packet.write(buf);
+        NetworkUtil.sendToTracking(entity, channel, buf, mode);
+    }
+
+    public void receiveFromServer(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+        int entityId = buf.readInt();
+        P packet = packetFactory.read(buf);
+        client.execute(() -> NetworkUtil.getGravityComponent(client, entityId).ifPresent(packet::run));
+    }
+
+    public void sendToServer(P packet, Identifier verifier, PacketByteBuf verifierInfoBuf) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        packet.write(buf);
+        buf.writeIdentifier(verifier);
+        buf.writeByteArray(verifierInfoBuf.array());
+        ClientPlayNetworking.send(channel, buf);
+    }
+
+    public void receiveFromClient(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+        P packet = packetFactory.read(buf);
+        Identifier verifier = buf.readIdentifier();
+        PacketByteBuf verifierInfoBuf = PacketByteBufs.create();
+        verifierInfoBuf.writeBytes(buf.readByteArray());
+        server.execute(() -> {
+            NetworkUtil.getGravityComponent(player).ifPresent(gc -> {
+                GravityVerifierRegistry.VerifierFunction<P> v = gravityVerifierRegistry.get(verifier);
+                if (v != null && v.check(player, verifierInfoBuf, packet)) {
+                    packet.run(gc);
+                    sendToClient(player, packet, NetworkUtil.PacketMode.EVERYONE_BUT_SELF);
+                } else {
+                    GravityChangerMod.LOGGER.info("VerifierFunction returned FALSE");
+                    sendFullStatePacket(player, NetworkUtil.PacketMode.ONLY_SELF, packet.getRotationParameters(), false);
+                }
+            });
+        });
+    }
+
+    public GravityVerifierRegistry<P> getVerifierRegistry() {
+        return gravityVerifierRegistry;
+    }
+
+    public void registerClientReceiver() {
+        ClientPlayNetworking.registerGlobalReceiver(channel, this::receiveFromServer);
+    }
+
+    public void registerServerReceiver() {
+        ServerPlayNetworking.registerGlobalReceiver(channel, this::receiveFromClient);
     }
 
     @FunctionalInterface

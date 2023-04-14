@@ -24,9 +24,11 @@ public interface GravityComponent extends Component, CommonTickingComponent {
     Direction getDefaultGravityDirection();
 
     double getGravityStrength();
-    void setDefaultGravityStrength(double strength);
 
     double getDefaultGravityStrength();
+
+    void setDefaultGravityStrength(double strength);
+
     Direction getActualGravityDirection();
 
     List<Gravity> getGravity();

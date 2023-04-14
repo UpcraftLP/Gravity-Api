@@ -7,11 +7,11 @@ import net.minecraft.network.PacketByteBuf;
 public class DefaultGravityStrengthPacket extends GravityPacket {
     public final double strength;
 
-    public DefaultGravityStrengthPacket(double _strength){
+    public DefaultGravityStrengthPacket(double _strength) {
         strength = _strength;
     }
 
-    public DefaultGravityStrengthPacket(PacketByteBuf buf){
+    public DefaultGravityStrengthPacket(PacketByteBuf buf) {
         this(buf.readDouble());
     }
 

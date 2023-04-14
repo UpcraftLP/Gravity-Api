@@ -24,7 +24,7 @@ public class GravityChangerItemAOE extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if(!world.isClient()) {
+        if (!world.isClient()) {
             Box box = user.getBoundingBox().expand(3);
             List<Entity> list = world.getEntitiesByClass(Entity.class, box, e -> !(e instanceof PlayerEntity));
             for (Entity entity : list) {

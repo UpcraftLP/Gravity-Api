@@ -14,7 +14,7 @@ public class OverwriteGravityPacket extends GravityPacket {
     public final List<Gravity> gravityList;
     public final boolean initialGravity;
 
-    public OverwriteGravityPacket(List<Gravity> _gravityList, boolean _initialGravity){
+    public OverwriteGravityPacket(List<Gravity> _gravityList, boolean _initialGravity) {
         gravityList = _gravityList;
         initialGravity = _initialGravity;
     }

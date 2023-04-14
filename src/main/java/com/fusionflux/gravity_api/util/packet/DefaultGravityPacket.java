@@ -11,13 +11,13 @@ public class DefaultGravityPacket extends GravityPacket {
     public final RotationParameters rotationParameters;
     public final boolean initialGravity;
 
-    public DefaultGravityPacket(Direction _direction, RotationParameters _rotationParameters, boolean _initialGravity){
+    public DefaultGravityPacket(Direction _direction, RotationParameters _rotationParameters, boolean _initialGravity) {
         direction = _direction;
         rotationParameters = _rotationParameters;
         initialGravity = _initialGravity;
     }
 
-    public DefaultGravityPacket(PacketByteBuf buf){
+    public DefaultGravityPacket(PacketByteBuf buf) {
         this(NetworkUtil.readDirection(buf), NetworkUtil.readRotationParameters(buf), buf.readBoolean());
     }
 

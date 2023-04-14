@@ -26,7 +26,7 @@ public abstract class ModItems {
 
     public static void init() {
         for (Field f : ModItems.class.getDeclaredFields()) {
-            if(Item.class.isAssignableFrom(f.getType())) {
+            if (Item.class.isAssignableFrom(f.getType())) {
                 try {
                     Item item = (Item) f.get(null);
                     String name = f.getName().toLowerCase(Locale.ROOT);

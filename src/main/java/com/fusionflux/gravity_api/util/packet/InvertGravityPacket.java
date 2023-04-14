@@ -5,12 +5,12 @@ import com.fusionflux.gravity_api.util.GravityComponent;
 import com.fusionflux.gravity_api.util.NetworkUtil;
 import net.minecraft.network.PacketByteBuf;
 
-public class InvertGravityPacket extends GravityPacket{
+public class InvertGravityPacket extends GravityPacket {
     public final boolean inverted;
     public final RotationParameters rotationParameters;
     public final boolean initialGravity;
 
-    public InvertGravityPacket(boolean _inverted, RotationParameters _rotationParameters, boolean _initialGravity){
+    public InvertGravityPacket(boolean _inverted, RotationParameters _rotationParameters, boolean _initialGravity) {
         inverted = _inverted;
         rotationParameters = _rotationParameters;
         initialGravity = _initialGravity;
@@ -18,9 +18,9 @@ public class InvertGravityPacket extends GravityPacket{
 
     public InvertGravityPacket(PacketByteBuf buf) {
         this(
-            buf.readBoolean(),
-            NetworkUtil.readRotationParameters(buf),
-            buf.readBoolean()
+                buf.readBoolean(),
+                NetworkUtil.readRotationParameters(buf),
+                buf.readBoolean()
         );
     }
 

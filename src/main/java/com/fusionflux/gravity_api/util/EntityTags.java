@@ -11,6 +11,6 @@ public class EntityTags {
     public static final TagKey<EntityType<?>> FORBIDDEN_ENTITY_RENDERING = TagKey.of(RegistryKeys.ENTITY_TYPE, GravityChangerMod.id("forbidden_entity_rendering"));
 
     public static boolean canChangeGravity(Entity entity) {
-            return !entity.getType().isIn(FORBIDDEN_ENTITIES);
+        return !entity.getType().isIn(FORBIDDEN_ENTITIES);
     }
 }

@@ -7,7 +7,8 @@ public class RotationParameters {
     private boolean rotateView;
     private boolean alternateCenter;
     private int rotationTimeMs;//Milliseconds
-    public RotationParameters(){
+
+    public RotationParameters() {
         this(
                 GravityChangerConfig.worldVelocity,
                 !GravityChangerConfig.keepWorldLook,
@@ -16,7 +17,7 @@ public class RotationParameters {
         );
     }
 
-    public RotationParameters(boolean _rotateVelocity, boolean _rotateView, boolean _alternateCenter, int _rotationTimeMs){
+    public RotationParameters(boolean _rotateVelocity, boolean _rotateView, boolean _alternateCenter, int _rotationTimeMs) {
         rotateVelocity = _rotateVelocity;
         rotateView = _rotateView;
         alternateCenter = _alternateCenter;

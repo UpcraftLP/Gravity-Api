@@ -6,19 +6,19 @@ import com.fusionflux.gravity_api.util.GravityComponent;
 import com.fusionflux.gravity_api.util.NetworkUtil;
 import net.minecraft.network.PacketByteBuf;
 
-public class UpdateGravityPacket extends GravityPacket{
+public class UpdateGravityPacket extends GravityPacket {
     public final Gravity gravity;
     public final boolean initialGravity;
 
-    public UpdateGravityPacket(Gravity _gravity, boolean _initialGravity){
-        gravity =  _gravity;
+    public UpdateGravityPacket(Gravity _gravity, boolean _initialGravity) {
+        gravity = _gravity;
         initialGravity = _initialGravity;
     }
 
     public UpdateGravityPacket(PacketByteBuf buf) {
         this(
-            NetworkUtil.readGravity(buf),
-            buf.readBoolean()
+                NetworkUtil.readGravity(buf),
+                buf.readBoolean()
         );
     }
 
